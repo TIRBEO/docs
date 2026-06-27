@@ -748,17 +748,18 @@ function AboutPage() {
 
     <Section id="products" title="Our Products">
       <p>Tirbeo offers a suite of products designed for different community needs:</p>
-      <div className="mt-4">
-        <GlassTable headers={["Product", "Description", "Status"]} rows={[
-          ["Tirbeo Chat", "Real-time messaging with channels, threads, and voice/video calls", "Live"],
-          ["Tirbeo Discuss", "Structured, threaded discussions with voting and Q&A", "Coming Soon"],
-          ["Tirbeo Resources", "Community-curated library of files, links, and media", "Coming Soon"],
-          ["Tirbeo Projects", "Lightweight project management with Kanban boards", "Coming Soon"],
-          ["Tirbeo Events", "Calendar-based event creation with RSVP management", "Coming Soon"],
-          ["Tirbeo Wiki", "Notion-like collaborative documentation with version history", "Coming Soon"],
-          ["Tirbeo Identity", "Central authentication and identity management", "Coming Soon"],
-        ]} />
-      </div>
+     <div className="mt-4">
+  <GlassTable
+    headers={["Platform", "Everything Included", "Status"]}
+    rows={[
+      [
+        "Tirbeo Chat",
+        "Real-time messaging, channels, threads, voice & video calls, discussions, resources, project management, events, collaborative wiki, and identity management—all in one unified workspace.",
+        "Live",
+      ],
+    ]}
+  />
+</div>
     </Section>
 
     <Section id="why" title="Why Tirbeo">
