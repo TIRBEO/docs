@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 
 // ─── TYPES ───
-type Page = string;
 type PageStatus = 'draft' | 'published';
 
 interface ContentPage {
@@ -525,13 +524,28 @@ function App() {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Glass className="p-8 w-full max-w-md">
           <h1 className="text-2xl font-bold text-white mb-6">Admin Login</h1>
-          <LoginForm onLogin={(pass) => {
-            if (login(pass)) {
-              setShowAdmin(true);
-            } else {
-              alert('Invalid password');
-            }
-          }} onCancel={() => setShowAdmin(false)} />
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm text-white/50 mb-1">Password</label>
+              <GlassInput 
+                type="password" 
+                id="admin-password"
+                placeholder="Enter admin password"
+              />
+              <p className="text-xs text-white/30 mt-1">Default: admin123</p>
+            </div>
+            <div className="flex gap-3">
+              <GlassButton variant="primary" onClick={() => {
+                const input = document.getElementById('admin-password') as HTMLInputElement;
+                if (login(input.value)) {
+                  setShowAdmin(true);
+                } else {
+                  alert('Invalid password');
+                }
+              }}>Login</GlassButton>
+              <GlassButton onClick={() => setShowAdmin(false)}>Cancel</GlassButton>
+            </div>
+          </div>
         </Glass>
       </div>
     );
@@ -661,30 +675,6 @@ function App() {
         </div>
       </div>
     </AppContext.Provider>
-  );
-}
-
-// ─── LOGIN FORM ───
-function LoginForm({ onLogin, onCancel }: { onLogin: (pass: string) => void; onCancel: () => void }) {
-  const [password, setPassword] = useState('');
-  
-  return (
-    <div className="space-y-4">
-      <div>
-        <label className="block text-sm text-white/50 mb-1">Password</label>
-        <GlassInput 
-          type="password" 
-          value={password} 
-          onChange={e => setPassword(e.target.value)}
-          placeholder="Enter admin password"
-        />
-        <p className="text-xs text-white/30 mt-1">Default: admin123</p>
-      </div>
-      <div className="flex gap-3">
-        <GlassButton variant="primary" onClick={() => onLogin(password)}>Login</GlassButton>
-        <GlassButton onClick={onCancel}>Cancel</GlassButton>
-      </div>
-    </div>
   );
 }
 
