@@ -5,10 +5,10 @@ import { GlassPill } from "../ui/Glass";
 function SidebarNavItem({ item, active, onClick }: { item: NavItem; active: boolean; onClick: () => void }) {
   return (
     <a href={`/#${item.slug}`} onClick={onClick}
-      className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all ${
+      className={`flex items-center gap-2.5 px-3 py-2 text-sm transition-all ${
         active
-          ? "border-l-[3px] border-white bg-white/[0.06] pl-[calc(0.75rem-3px)] font-medium text-white"
-          : "border-l-[3px] border-transparent pl-3 text-white/40 hover:bg-white/[0.04] hover:text-white/70"
+          ? "bg-white/[0.06] font-medium text-white"
+          : "text-white/40 hover:bg-white/[0.04] hover:text-white/70"
       }`}
     >
       {item.label}
@@ -22,7 +22,7 @@ function SidebarGroup({ group, expanded, onToggle, activePage, onItemClick }: {
   return (
     <div className="mb-1">
       <button onClick={onToggle}
-        className="flex w-full items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white/40 transition-colors hover:text-white"
+        className="flex w-full items-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white/40 transition-colors hover:text-white"
       >
         <Icon name="chevron-right" className={`h-3 w-3 transition-transform ${expanded ? "rotate-90" : ""}`} />
         {group.label}
@@ -49,15 +49,15 @@ export function Sidebar({
 }) {
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col border-r border-white/[0.07] bg-black backdrop-blur-2xl transition-transform duration-300 lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col bg-black backdrop-blur-2xl transition-transform duration-300 lg:translate-x-0 ${
         open ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="flex items-center gap-3 border-b border-white/[0.07] px-5 py-4">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-bold text-black">T</span>
+      <div className="flex items-center gap-3 px-5 py-4">
+        <span className="flex h-8 w-8 items-center justify-center bg-white text-sm font-bold text-black">T</span>
         <span className="font-semibold tracking-tight text-white">Tirbeo</span>
         <GlassPill>Docs</GlassPill>
-        <button onClick={onClose} className="ml-auto rounded-lg p-1.5 text-white/30 hover:bg-white/[0.06] hover:text-white lg:hidden">
+        <button onClick={onClose} className="ml-auto p-1.5 text-white/30 hover:bg-white/[0.06] hover:text-white lg:hidden">
           <Icon name="x" className="h-4 w-4" />
         </button>
       </div>
@@ -67,11 +67,11 @@ export function Sidebar({
         <input
           type="text" placeholder="Search..." value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full rounded-xl border border-white/[0.07] bg-white/[0.04] py-2 pl-9 pr-10 text-sm text-white placeholder:text-white/20 backdrop-blur-2xl focus:border-white/20 focus:bg-white/[0.06] focus:outline-none"
+          className="w-full bg-white/[0.04] py-2 pl-9 pr-10 text-sm text-white placeholder:text-white/20 backdrop-blur-2xl focus:bg-white/[0.06] focus:outline-none"
         />
-        <span className="absolute right-6 top-1/2 -translate-y-1/2 rounded-md border border-white/[0.07] bg-white/[0.04] px-1.5 py-0.5 font-mono text-[11px] text-white/30">⌘K</span>
+        <span className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[11px] text-white/30">⌘K</span>
         {searchQuery && filteredItems.length > 0 && (
-          <div className="absolute left-4 right-4 top-full mt-1 overflow-hidden rounded-xl border border-white/[0.07] bg-black backdrop-blur-2xl">
+          <div className="absolute left-4 right-4 top-full mt-1 overflow-hidden bg-black backdrop-blur-2xl">
             {filteredItems.map((item) => (
               <a key={item.slug} href={`/#${item.slug}`}
                 className="flex items-center gap-2 px-4 py-2.5 text-sm text-white/50 transition-colors hover:bg-white/[0.06] hover:text-white"
@@ -94,9 +94,9 @@ export function Sidebar({
         ))}
       </nav>
 
-      <div className="border-t border-white/[0.07] px-3 py-3">
+      <div className="px-3 py-3">
         <a href="https://github.com/TIRBEO" target="_blank" rel="noopener noreferrer"
-          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-white/40 transition-all hover:bg-white/[0.04] hover:text-white/70"
+          className="flex items-center gap-2.5 px-3 py-2 text-sm text-white/40 transition-all hover:bg-white/[0.04] hover:text-white/70"
         >
           <Icon name="github" className="h-4 w-4" />
           <span className="flex-1">TIRBEO on GitHub</span>

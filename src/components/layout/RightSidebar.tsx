@@ -12,7 +12,7 @@ export function RightSidebar() {
           </span>
           <nav className="mt-3 space-y-1.5 text-sm">
             <a href="#overview" className="flex items-center gap-2 text-white/50 transition-colors hover:text-white">
-              <span className="h-1 w-1 rounded-full bg-white/40" />Overview
+              <span className="h-1 w-1 bg-white/40" />Overview
             </a>
             <a href="#features" className="flex items-center gap-2 pl-3 text-white/40 transition-colors hover:text-white/70">Features</a>
             <a href="#guide" className="flex items-center gap-2 pl-3 text-white/40 transition-colors hover:text-white/70">Guide</a>
@@ -21,10 +21,10 @@ export function RightSidebar() {
         <Glass className="p-4">
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-white/40">Helpful?</span>
           <div className="mt-3 flex gap-2">
-            <button className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2 text-xs text-white/40 backdrop-blur-2xl transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white active:scale-95">
+            <button className="flex flex-1 items-center justify-center gap-1.5 bg-white/[0.04] px-3 py-2 text-xs text-white/40 backdrop-blur-2xl transition-all hover:bg-white/[0.08] hover:text-white active:scale-95">
               <ThumbsUp className="h-3.5 w-3.5" />Yes
             </button>
-            <button className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2 text-xs text-white/40 backdrop-blur-2xl transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white active:scale-95">
+            <button className="flex flex-1 items-center justify-center gap-1.5 bg-white/[0.04] px-3 py-2 text-xs text-white/40 backdrop-blur-2xl transition-all hover:bg-white/[0.08] hover:text-white active:scale-95">
               <ThumbsDown className="h-3.5 w-3.5" />No
             </button>
           </div>

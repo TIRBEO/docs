@@ -11,8 +11,8 @@ export function renderMarkdown(content: string): ReactNode[] {
   const flushCodeBlock = (key: number) => {
     if (codeBlockLines.length > 0) {
       elements.push(
-        <div key={`code-${key}`} className="overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.02] my-4">
-          <div className="flex items-center justify-between border-b border-white/[0.07] px-4 py-2">
+        <div key={`code-${key}`} className="overflow-hidden bg-white/[0.02] my-4">
+          <div className="flex items-center justify-between bg-white/[0.04] px-4 py-2">
             <span className="text-xs font-medium text-white/30">{codeBlockLang || "Code"}</span>
           </div>
           <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
