@@ -5,10 +5,10 @@ import { GlassPill } from "../ui/Glass";
 function SidebarNavItem({ item, active, onClick }: { item: NavItem; active: boolean; onClick: () => void }) {
   return (
     <a href={`/#${item.slug}`} onClick={onClick}
-      className={`flex items-center gap-2.5 px-3 py-2 text-sm transition-all ${
+      className={`flex items-center gap-2.5 px-3 py-1.5 text-sm transition-all rounded ${
         active
-          ? "bg-white/[0.06] font-medium text-white"
-          : "text-white/40 hover:bg-white/[0.04] hover:text-white/70"
+          ? "bg-white/[0.08] font-medium text-white border-l-2 border-white"
+          : "text-white/40 hover:bg-white/[0.04] hover:text-white/70 border-l-2 border-transparent"
       }`}
     >
       {item.label}
@@ -20,15 +20,15 @@ function SidebarGroup({ group, expanded, onToggle, activePage, onItemClick }: {
   group: NavGroup; expanded: boolean; onToggle: () => void; activePage: string; onItemClick: () => void;
 }) {
   return (
-    <div className="mb-1">
+    <div className="mb-4">
       <button onClick={onToggle}
-        className="flex w-full items-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white/40 transition-colors hover:text-white"
+        className="flex w-full items-center gap-1.5 px-3 py-2 text-sm font-bold uppercase tracking-[0.08em] text-white/60 transition-colors hover:text-white/90 border-b border-white/5"
       >
         <Icon name="chevron-right" className={`h-3 w-3 transition-transform ${expanded ? "rotate-90" : ""}`} />
         {group.label}
       </button>
       {expanded && (
-        <div className="mt-0.5 space-y-px">
+        <div className="mt-1.5 space-y-0.5 ml-2 border-l border-white/5 pl-2">
           {group.items.map((item) => (
             <SidebarNavItem key={item.slug} item={item} active={activePage === item.slug} onClick={onItemClick} />
           ))}
