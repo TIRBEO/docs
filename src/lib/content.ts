@@ -38,6 +38,22 @@ export async function getDocArticles(categoryId?: string): Promise<DocArticle[]>
   return (data as DocArticle[]) || [];
 }
 
+export async function getDocArticleBySlug(articleSlug: string): Promise<{ article: DocArticle; category: DocCategory } | null> {
+  const { data: article } = await supabase
+    .from("doc_articles")
+    .select("*")
+    .eq("slug", articleSlug)
+    .eq("is_published", true)
+    .single();
+  if (!article) return null;
+  const { data: cat } = await supabase
+    .from("doc_categories")
+    .select("*")
+    .eq("id", article.category_id)
+    .single();
+  return { article: article as DocArticle, category: cat as DocCategory };
+}
+
 export async function getDocArticle(categorySlug: string, articleSlug: string): Promise<DocArticle | null> {
   const { data: cat } = await supabase
     .from("doc_categories")
