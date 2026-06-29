@@ -1,168 +1,114 @@
-import { useState, useEffect, useRef } from "react";
-import { getDocCategories, getDocArticles, type DocCategory, type DocArticle } from "./lib/content";
-import type { NavGroup } from "./types";
-import { Sidebar } from "./components/layout/Sidebar";
-import { TopBar } from "./components/layout/TopBar";
-import { SiteFooter } from "./components/layout/SiteFooter";
-import { RightSidebar } from "./components/layout/RightSidebar";
-import { BottomNav } from "./components/layout/BottomNav";
-import { PageRenderer } from "./components/PageRenderer";
-import { Glass, GlassPill } from "./components/ui/Glass";
-import { Icon } from "./components/ui/Icon";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import "./styles.css";
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-function getArticleSlugFromHash(): string | null {
-  const hash = window.location.hash.replace("#", "");
-  if (!hash || hash === "home") return null;
-  return hash;
-}
-
-function HomePage({ categories, articlesByCategory }: {
-  categories: DocCategory[];
-  articlesByCategory: Record<string, DocArticle[]>;
-}) {
-  const firstArticle = categories.length > 0
-    ? articlesByCategory[categories[0].id]?.[0]
-    : null;
-
+export default function App() {
   return (
-    <>
-      <div className="mb-16">
-        <GlassPill className="mb-4">Documentation</GlassPill>
-        <h1 className="text-[3.5rem] font-bold leading-[1.05] tracking-tight text-white">Connect. Create. Collaborate.</h1>
-        <p className="mt-4 max-w-xl text-lg leading-relaxed text-white/50">
-          Everything you need to build, manage, and grow your community on Tirbeo.
-        </p>
-        {firstArticle && (
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href={`/#${firstArticle.slug}`}
-              className="inline-flex items-center gap-2 bg-white px-5 py-2.5 text-sm font-medium text-black transition-all hover:bg-white/90 active:scale-[0.97]"
-            >Get Started<Icon name="arrow-right" className="h-4 w-4" /></a>
-          </div>
-        )}
-      </div>
-      {categories.map((cat) => (
-        <div key={cat.id} className="mb-12">
-          <span className="text-xs font-semibold uppercase tracking-[0.12em] text-white/30">{cat.title}</span>
-          {cat.description && <p className="mt-1 text-sm text-white/40">{cat.description}</p>}
-          <div className="mt-3 grid gap-4 sm:grid-cols-2">
-            {(articlesByCategory[cat.id] || []).map((article) => (
-              <a key={article.id} href={`/#${article.slug}`} className="group block">
-                <Glass className="p-5 transition-all duration-300 hover:bg-white/[0.06]">
-                  <h3 className="text-base font-semibold text-white">{article.title}</h3>
-                </Glass>
-              </a>
-            ))}
-          </div>
-        </div>
-      ))}
-    </>
+    <StrictMode>
+      <ThemeProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </ThemeProvider>
+    </StrictMode>
   );
 }
 
-export default function Docs() {
-  const [articleSlug, setArticleSlug] = useState<string | null>(() => getArticleSlugFromHash());
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const [searchQuery, setSearchQuery] = useState("");
-  const searchRef = useRef<HTMLDivElement>(null);
-
-  const [categories, setCategories] = useState<DocCategory[]>([]);
-  const [articlesByCategory, setArticlesByCategory] = useState<Record<string, DocArticle[]>>({});
-
-  useEffect(() => {
-    getDocCategories().then(async (cats) => {
-      setCategories(cats);
-      const byCat: Record<string, DocArticle[]> = {};
-      const initExpanded: Record<string, boolean> = {};
-      for (const cat of cats) {
-        const articles = await getDocArticles(cat.id);
-        byCat[cat.id] = articles;
-        initExpanded[cat.title] = true;
-      }
-      setArticlesByCategory(byCat);
-      setExpanded(initExpanded);
-    });
-  }, []);
-
-  useEffect(() => {
-    const onHashChange = () => {
-      setArticleSlug(getArticleSlugFromHash());
-      setSidebarOpen(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(e.target as Node)) setSearchQuery("");
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  const isHome = articleSlug === null;
-
-  const navGroups: NavGroup[] = categories.map((cat) => ({
-    label: cat.title,
-    items: (articlesByCategory[cat.id] || []).map((a) => ({
-      slug: a.slug,
-      label: a.title,
-    })),
-  }));
-
-  const allItems = navGroups.flatMap((g) => g.items);
-  const pageTitle = allItems.find((i) => i.slug === articleSlug)?.label || (isHome ? "Home" : "Docs");
-
-  const currentArticle = allItems.find((i) => i.slug === articleSlug);
-  const currentIndex = currentArticle ? allItems.indexOf(currentArticle) : -1;
-  const prev = currentIndex > 0 ? allItems[currentIndex - 1] : null;
-  const next = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
-
-  const filteredItems = searchQuery
-    ? allItems.filter((i) => i.label.toLowerCase().includes(searchQuery.toLowerCase()))
-    : [];
-
+function AppContent() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Sidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        page={articleSlug || ""}
-        expanded={expanded}
-        onToggle={(label) => setExpanded((e) => ({ ...e, [label]: !e[label] }))}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        filteredItems={filteredItems}
-        searchRef={searchRef}
-        groups={navGroups}
-      />
-
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-30 bg-black/70 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />
-      )}
-
-      <div className="flex min-h-screen min-w-0 flex-1 flex-col lg:ml-[280px]">
-        <TopBar onMenuClick={() => setSidebarOpen(true)} pageTitle={pageTitle} />
-
-        <div id="main-content" className="flex-1">
-          <div className="mx-auto flex max-w-[88rem] gap-10 px-6 py-12 lg:px-10">
-            <main className="min-w-0 flex-1 max-w-[54rem]">
-              {isHome ? (
-                <HomePage categories={categories} articlesByCategory={articlesByCategory} />
-              ) : (
-                <PageRenderer articleSlug={articleSlug} />
-              )}
-              {!isHome && (
-                <BottomNav prev={prev} next={next} currentIndex={currentIndex} total={allItems.length} />
-              )}
-              <SiteFooter />
-            </main>
-            {!isHome && <RightSidebar />}
+    <div className="min-h-screen bg-background text-foreground">
+      <nav className="border-b border-border bg-card sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <div className="font-display text-xl font-semibold">
+              <Link to="/" className="hover:text-foreground/80 transition-colors">
+                Tirbeo Docs
+              </Link>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link 
+                to="/" 
+                className="text-sm hover:text-foreground/80 transition-colors"
+              >
+                Home
+              </Link>
+              <Link 
+                to="/getting-started" 
+                className="text-sm hover:text-foreground/80 transition-colors"
+              >
+                Getting Started
+              </Link>
+              <Link 
+                to="/api" 
+                className="text-sm hover:text-foreground/80 transition-colors"
+              >
+                API Reference
+              </Link>
+              <ThemeToggle className="ml-4" />
+            </div>
           </div>
         </div>
+      </nav>
+
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/getting-started" element={<GettingStartedPage />} />
+          <Route path="/api" element={<ApiReferencePage />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
+function HomePage() {
+  return (
+    <div className="text-center space-y-8">
+      <h1 className="font-display text-5xl font-semibold tracking-tight">
+        Tirbeo Documentation
+      </h1>
+      <p className="text-xl text-ink-soft max-w-2xl mx-auto">
+        Complete documentation for the Tirbeo platform, including APIs, guides, and technical specifications.
+      </p>
+      <div className="grid md:grid-cols-3 gap-6 mt-12">
+        <Card title="Getting Started" description="Quick start guide and setup instructions" />
+        <Card title="API Reference" description="Complete API documentation and examples" />
+        <Card title="Tutorials" description="Step-by-step guides and best practices" />
       </div>
+    </div>
+  );
+}
+
+function GettingStartedPage() {
+  return (
+    <div className="max-w-4xl mx-auto space-y-8">
+      <h1 className="font-display text-4xl font-semibold">Getting Started</hice>
+      <p className="text-ink-soft">
+        Welcome to Tirbeo! This guide will help you set up your development environment and start building.
+      </p>
+    </div>
+  );
+}
+
+function ApiReferencePage() {
+  return (
+    <div className="max-w-4xl mx-auto space-y-8">
+      <h1 className="font-display text-4xl font-semibold">API Reference</h1>
+      <p className="text-ink-soft">
+        Complete API documentation for all Tirbeo endpoints and services.
+      </p>
+    </div>
+  );
+}
+
+function Card({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="border border-border bg-card rounded-lg p-6 hover:border-border-hover transition-colors">
+      <h3 className="font-display text-xl font-semibold mb-2">{title}</h3>
+      <p className="text-ink-soft">{description}</p>
     </div>
   );
 }
